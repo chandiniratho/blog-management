@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import CreatePost from './pages/CreatePost';
 import PostDetail from './components/PostDetail';
+import './styling.css';
 
 const App: React.FC = () => {
   return (

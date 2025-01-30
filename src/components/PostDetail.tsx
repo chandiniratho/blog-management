@@ -1,27 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPost } from '../services/api';
+import { getPost, deletePost } from '../services/api';
 import { Post } from '../types/types';
-import '../styling.css'; // Import the CSS file
+import { useNavigate } from 'react-router-dom';
 
 const PostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<Post | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (id) {
-      getPost(Number(id)).then(setPost);
-    }
+    const fetchPost = async () => {
+      if (id) {
+        const data = await getPost(parseInt(id));
+        setPost(data);
+      }
+    };
+    fetchPost();
   }, [id]);
 
-  if (!post) {
-    return <p>Loading...</p>;
-  }
+  const handleDelete = async () => {
+    if (id) {
+      await deletePost(parseInt(id));
+      navigate('/');
+    }
+  };
 
   return (
-    <div className="post-item">
-      <h2>{post.title}</h2>
-      <p>{post.content}</p>
+    <div>
+      {post ? (
+        <>
+          <h2>{post.title}</h2>
+          <p>{post.content}</p>
+          <button onClick={handleDelete}>Delete Post</button>
+        </>
+      ) : (
+        <p>Post not found</p>
+      )}
     </div>
   );
 };
